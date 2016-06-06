@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 @SpringBootApplication
 public class DataJpaPreAuthorizeApplication implements CommandLineRunner {
@@ -21,7 +25,10 @@ public class DataJpaPreAuthorizeApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        Arrays.asList("dhubau", "gregturn", "ogierke")
-                .forEach((username) -> commentRepository.save(new Comment(username, "foo")));
+        SecurityContext ctx = SecurityContextHolder.createEmptyContext();
+        SecurityContextHolder.setContext(ctx);
+        ctx.setAuthentication(new UsernamePasswordAuthenticationToken("dhubau", "password", Collections.singletonList(new SimpleGrantedAuthority("USER"))));
+        commentRepository.save(new Comment("dhubau", "foo"));
+        SecurityContextHolder.clearContext();
     }
 }
