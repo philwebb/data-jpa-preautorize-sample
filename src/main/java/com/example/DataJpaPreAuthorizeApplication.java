@@ -22,11 +22,6 @@ public class DataJpaPreAuthorizeApplication implements CommandLineRunner {
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("dhubau").password("password").roles("USER");
-    }
-
-    @Autowired
     private CommentRepository commentRepository;
 
     @Override
